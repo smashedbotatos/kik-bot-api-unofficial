@@ -6,6 +6,7 @@ and echos back whatever chat messages it receives.
 
 import logging
 import sys
+from typing import Union
 
 import kik_unofficial.datatypes.xmpp.chatting as chatting
 from kik_unofficial.client import KikClient
@@ -14,6 +15,7 @@ from kik_unofficial.datatypes.xmpp.errors import SignUpError, LoginError
 from kik_unofficial.datatypes.xmpp.roster import FetchRosterResponse, PeersInfoResponse
 from kik_unofficial.datatypes.xmpp.sign_up import RegisterResponse, UsernameUniquenessResponse
 from kik_unofficial.datatypes.xmpp.login import LoginResponse, ConnectionFailedResponse
+from kik_unofficial.datatypes.xmpp.xiphias import *
 
 username = sys.argv[1]
 password = sys.argv[2] if len(sys.argv) > 2 else input('Password: ')
@@ -65,9 +67,12 @@ class EchoBot(KikClientCallback):
 
     def on_image_received(self, image_message: chatting.IncomingImageMessage):
         print("[+] Image message was received from {}".format(image_message.from_jid))
-    
+
     def on_peer_info_received(self, response: PeersInfoResponse):
         print("[+] Peer info: " + str(response.users))
+
+    def on_xiphias_get_users_response(self, response: Union[UsersResponse, UsersByAliasResponse]):
+        print("[+] Users info: " + str(response.users[0].__dict__))
 
     def on_group_status_received(self, response: chatting.IncomingGroupStatus):
         print("[+] Status message in {}: {}".format(response.group_jid, response.status))

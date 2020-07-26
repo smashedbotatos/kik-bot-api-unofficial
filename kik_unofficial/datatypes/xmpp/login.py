@@ -6,7 +6,7 @@ import hmac
 import rsa
 from bs4 import BeautifulSoup
 from kik_unofficial.datatypes.xmpp.base_elements import XMPPElement
-from kik_unofficial.device_configuration import device_id, kik_version_info, android_id
+from kik_unofficial.device_configuration import *
 from kik_unofficial.utilities.cryptographic_utilities import CryptographicUtils
 
 captcha_element = '<challenge><response>{}</response></challenge>'
@@ -40,23 +40,25 @@ class LoginRequest(XMPPElement):
                 '{}'
                 '<device-id>{}</device-id>'
                 '<install-referrer>utm_source=google-play&amp;utm_medium=organic</install-referrer>'
-                '<operator>unknown</operator>'
-                '<install-date>unknown</install-date>'
+                '<operator>{}</operator>'
+                '<install-date>{}</install-date>'
                 '<device-type>android</device-type>'
-                '<brand>generic</brand>'
-                '<logins-since-install>1</logins-since-install>'
+                '<brand>{}</brand>'
+                '<logins-since-install>{}</logins-since-install>'
                 '<version>{}</version>'
                 '<lang>en_US</lang>'
-                '<android-sdk>19</android-sdk>'
-                '<registrations-since-install>0</registrations-since-install>'
+                '<android-sdk>{}</android-sdk>'
+                '<registrations-since-install>{}</registrations-since-install>'
                 '<prefix>CAN</prefix>'
                 '<android-id>{}</android-id>'
-                '<model>Samsung Galaxy S5 - 4.4.4 - API 19 - 1080x1920</model>'
+                '<model>{}</model>'
                 '{}'
                 '</query>'
                 '</iq>').format(self.message_id, tag.format(self.username, password_key),
                                 self.device_id_override if self.device_id_override else device_id,
-                                kik_version, self.android_id_override if self.android_id_override else android_id, captcha)
+                                operator, install_date, brand, logins_since_install, kik_version, android_sdk,
+                                registrations_since_install,
+                                self.android_id_override if self.android_id_override else android_id, model, captcha)
         return data.encode()
 
 
